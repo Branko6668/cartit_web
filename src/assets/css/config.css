@@ -1,0 +1,58 @@
+@import "./base.css";
+
+:root {
+  /* 主色彩系统 - 白色基调 */
+  --color-bg: #ffffff;               /* 主背景白色 */
+  --color-bg-secondary: #f8f9fa;     /* 次要背景浅灰 */
+  --color-bg-card: #ffffff;          /* 卡片背景白色 */
+  --color-text: #000000;             /* 主文字黑色 */
+  --color-text-secondary: #333333;   /* 次要文字深灰 */
+  --color-text-muted: #666666;       /* 弱化文字中灰 */
+
+  /* 点缀色 - 橙色系 */
+  --color-primary: #ff6b35;        /* 主橙色 - 按钮、链接 */
+  --color-primary-hover: #ff5722;  /* 悬停态 */
+  --color-primary-light: #ff8a65;  /* 浅橙色 - 高亮 */
+  
+  /* 功能色彩 */
+  --color-success: #4caf50;        /* 成功状态 */
+  --color-warning: #ff9800;        /* 警告状态 */
+  --color-error: #f44336;          /* 错误状态 */
+  
+  /* 边框与分割线 - 黑色勾勒 */
+  --color-border: #000000;          /* 主边框黑色 */
+  --color-border-light: #333333;    /* 浅边框深灰 */
+  --color-divider: #e0e0e0;         /* 分割线浅灰 */
+
+  /* 布局尺寸 */
+  --content-width: 1200px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+
+  /* 字体大小 */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+
+  /* 圆角与边框 */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-full: 50%;
+
+  /* 阴影系统 */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+  /* 过渡动画 */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
