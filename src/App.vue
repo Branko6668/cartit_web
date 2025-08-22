@@ -16,9 +16,11 @@
 - 保持此处最小化：布局容器 + <router-view/>（必要时配合 <transition> / <keep-alive>）。
 -->
 <router-view/>
+<BackToTop />
 </template>
 
 <script setup>
+import BackToTop from './components/common/BackToTop.vue'
   // import { getMainMenu } from './network/home';
 
   // getMainMenu().then(response => {

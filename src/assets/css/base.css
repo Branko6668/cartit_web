@@ -12,6 +12,7 @@ body {
   color: var(--color-text);              /* 使用黑色文字 */
   line-height: 1.6;
   transition: var(--transition-normal);
+  overflow-x: hidden; /* 禁止页面横向滚动 */
 }
 
 /* 链接样式 */

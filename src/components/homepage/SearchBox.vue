@@ -9,6 +9,7 @@
                     @focus="showSuggestions = true"
                     @blur="hideSuggestions"
                     @input="onInputChange"
+                    @keyup.enter="performSearch"
                     placeholder="搜索商品、品牌或店铺"
                     class="search-input"
                 >
@@ -102,11 +103,12 @@ const selectSuggestion = (suggestion) => {
     performSearch()
 }
 
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const performSearch = () => {
-    if (searchText.value.trim()) {
-        console.log('搜索:', searchText.value)
-        // 这里可以调用搜索API或跳转到搜索结果页
-        // 例如: router.push({ name: 'SearchResults', query: { q: searchText.value } })
+    const q = searchText.value.trim()
+    if (q) {
+        router.push({ name: 'search', query: { q, sort: 0, page: 1, page_size: 20 } })
     }
 }
 
