@@ -31,16 +31,15 @@
             </div>
         </div>
 
-        <!-- 热门搜索标签/跨界跳转链接 -->
+        <!-- 热门搜索标签（纯文本链接） -->
         <div class="hot-tags">
-            <span class="tags-label">热门搜索：</span>
             <div class="tags-container">
                 <a 
                     href="#" 
                     class="tag-item"
                     v-for="(tag, index) in hotTags"
                     :key="index"
-                    @click="searchByTag(tag.name)"
+                    @click.prevent="searchByTag(tag.name)"
                 >
                     {{ tag.name }}
                 </a>
@@ -125,16 +124,17 @@ const searchByTag = (tagName) => {
 
 .search-container {
     position: relative;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm); // 收紧与热门区域的间距
 }
 
 .search-input-box {
     display: flex;
     align-items: center;
-    border: 2px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    border: 2px solid var(--color-border); // 与购物车统一
+    border-radius: 9999px; // 胶囊椭圆形
     background: var(--color-bg);
     overflow: hidden;
+    height: 40px; // 固定高度与购物车一致
     
     &:focus-within {
         border-color: var(--color-primary);
@@ -144,7 +144,7 @@ const searchByTag = (tagName) => {
 
 .search-input {
     flex: 1;
-    padding: 12px 16px;
+    padding: 0 16px; // 与购物车水平内边距匹配
     border: none;
     outline: none;
     font-size: var(--font-size-md);
@@ -157,20 +157,20 @@ const searchByTag = (tagName) => {
 }
 
 .search-btn {
-    padding: 12px 16px;
+    padding: 0 12px;
     border: none;
-    background: var(--color-primary);
+    background: transparent; // 使用透明背景，直接显示图片
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    
+    transition: opacity 0.2s ease;
+
     &:hover {
-        background: var(--color-primary-hover);
+        opacity: 0.85; // 轻微反馈，不改变颜色
     }
-    
+
     .search-icon {
-        width: 20px;
-        height: 20px;
-        filter: brightness(0) invert(1); // 使图标变白色
+        width: 30px;
+        height: 30px;
+        /* 去除白色滤镜，显示原图颜色 */
     }
 }
 
@@ -216,14 +216,6 @@ const searchByTag = (tagName) => {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--spacing-sm);
-}
-
-.tags-label {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
-    margin-right: var(--spacing-sm);
-    white-space: nowrap;
 }
 
 .tags-container {
@@ -233,20 +225,19 @@ const searchByTag = (tagName) => {
 }
 
 .tag-item {
-    padding: 6px 12px;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-divider);
-    border-radius: var(--border-radius-sm);
-    text-decoration: none;
+    padding: 0;                 // 去掉内边距
+    background: transparent;    // 无底色
+    border: none;               // 无边框
+    text-decoration: none;      // 默认不下划线
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
-    transition: all 0.2s ease;
-    
+    margin-right: var(--spacing-md);
+    line-height: 1.8;
+    transition: color 0.2s ease;
+
     &:hover {
-        background: var(--color-primary-light);
-        color: var(--color-bg);
-        border-color: var(--color-primary);
-        transform: translateY(-1px);
+        color: var(--color-primary); // 悬停变为主题色
+        text-decoration: underline;  // 悬停显示下划线
     }
 }
 </style>

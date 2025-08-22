@@ -6,7 +6,8 @@
 
 <style lang="less" scoped>
     div {
-        padding-top: 20px;
+        display: flex;
+        align-items: center; // 垂直居中
         .logo {
             width: 100px;
             height: 100px;
