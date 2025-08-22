@@ -11,8 +11,8 @@
         align-items: center; // 垂直居中
     }
     .logo {
-        width: 130px;
-        height: 130px;
+        width: 110px;
+        height: 110px;
         display: block;
     }
 </style>

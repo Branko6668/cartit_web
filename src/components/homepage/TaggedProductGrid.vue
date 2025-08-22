@@ -129,6 +129,13 @@ watch(activeTag, async (val) => {
 .tag-grid-wrap {
   width: var(--content-width);
   margin: var(--spacing-xl) auto 0; /* 与上方滚动模块留出更多呼吸感 */
+  /* 本区块专属配色：绿色主色 + 淡蓝绿色背景 */
+  --accent-green: #4ba87a5d;            /* emerald-500 */
+  --accent-green-2: #73fcdea6;          /* emerald-400 */
+  --accent-green-shadow: rgba(81, 140, 218, 0.623);
+  --accent-green-shadow-2: rgba(64, 102, 151, 0.808);
+  --teal-bg: rgba(56, 189, 248, 0.10);  /* cyan-400 轻薄 */
+  --teal-bg-2: rgba(16, 185, 129, 0.08); /* emerald-500 轻薄 */
 }
 .tag-tabs {
   display: flex;
@@ -149,10 +156,14 @@ watch(activeTag, async (val) => {
 }
 .tag-tab:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); border-color: var(--color-border-light); }
 .tag-tab.active {
-  background: linear-gradient(135deg, rgba(255,137,0,.18), rgba(255,137,0,.08));
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  box-shadow: 0 8px 22px rgba(255,125,0,0.18);
+  background: linear-gradient(135deg, rgba(16,185,129,.18), rgba(56,189,248,.10));
+  border-color: var(--accent-green);
+  color: var(--color-text); /* 选中文本改为黑色/正文色 */
+  box-shadow: 0 8px 22px var(--accent-green-shadow);
+}
+.tag-tab:hover {
+  border-color: var(--accent-green);
+  box-shadow: 0 6px 18px var(--accent-green-shadow-2);
 }
 
 .grid-area { min-height: 300px; }
@@ -169,9 +180,9 @@ watch(activeTag, async (val) => {
 }
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-  border-color: var(--color-primary);
-  background: linear-gradient(180deg, rgba(255,137,0,0.06), rgba(0,0,0,0));
+  box-shadow: 0 10px 28px var(--accent-green-shadow);
+  border-color: var(--accent-green);
+  background: linear-gradient(180deg, var(--teal-bg), rgba(0,0,0,0));
 }
 .thumb-wrap {
   position: relative;

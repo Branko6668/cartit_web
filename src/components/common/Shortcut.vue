@@ -14,7 +14,8 @@
 
 <style lang="less" scoped>
 .warpper {
-    background-color: var(--color-bg-secondary);
+    /* 左上淡橙 → 右下淡紫 渐变背景 */
+    background: linear-gradient(135deg, rgba(255, 183, 106, 0.25) 0%, rgba(199, 178, 255, 0.25) 100%);
     height: 30px;
     .header {
         width: var(--content-width);
@@ -24,6 +25,11 @@
         a{
             margin-left: 10px;
             margin-right: 10px;
+            color: var(--color-text);
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: underline;
         }
     }
 }

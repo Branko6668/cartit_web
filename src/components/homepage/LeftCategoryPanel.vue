@@ -85,8 +85,8 @@ const setL3PanelEl = (el) => { l3PanelRef.value = el && el.$el ? el.$el : el }
 const l2Pos = reactive({ top: 0, height: 0, width: 320 })
 const l3Pos = reactive({ top: 0, left: 0, maxHeight: 0, width: 340 })
 const l3Abs = reactive({ top: 0, left: 0 })
-const l2Metrics = reactive({ colWidth: 180, minColWidth: 110, maxColWidth: 220, gap: 12, paddingX: 12, paddingY: 12, cols: 1 })
-const l3Metrics = reactive({ colWidth: 160, minColWidth: 110, maxColWidth: 220, gap: 10, paddingX: 10, paddingY: 8, cols: 1 })
+const l2Metrics = reactive({ colWidth: 160, minColWidth: 90, maxColWidth: 180, gap: 8, paddingX: 8, paddingY: 8, cols: 1 })
+const l3Metrics = reactive({ colWidth: 140, minColWidth: 90, maxColWidth: 180, gap: 8, paddingX: 8, paddingY: 8, cols: 1 })
 const active = reactive({ l1Id: null, l2Id: null })
 
 const updateL2Position = async (i) => {
@@ -124,7 +124,7 @@ const updateL2Position = async (i) => {
   let maxText = 0
   const nameNodes = panel.querySelectorAll('.l2-name')
   nameNodes.forEach(n => { const r = n.getBoundingClientRect(); if (r && r.width) maxText = Math.max(maxText, r.width) })
-  const desiredColW = Math.max(l2Metrics.minColWidth, Math.min(l2Metrics.maxColWidth, Math.ceil(maxText + 16)))
+  const desiredColW = Math.max(l2Metrics.minColWidth, Math.min(l2Metrics.maxColWidth, Math.ceil(maxText + 8)))
 
   const availableWidth = Math.max(240, viewportW - l1Rect.right - margin)
   const maxColsByWidth = Math.max(1, Math.floor((availableWidth - l2Metrics.paddingX * 2 + l2Metrics.gap) / (desiredColW + l2Metrics.gap)))
@@ -181,7 +181,7 @@ const updateL3Position = async (j) => {
   let maxText = 0
   const linkNodes = panel.querySelectorAll('.l3-list a')
   linkNodes.forEach(n => { const r = n.getBoundingClientRect(); if (r && r.width) maxText = Math.max(maxText, r.width) })
-  const desiredColW = Math.max(l3Metrics.minColWidth, Math.min(l3Metrics.maxColWidth, Math.ceil(maxText + 12)))
+  const desiredColW = Math.max(l3Metrics.minColWidth, Math.min(l3Metrics.maxColWidth, Math.ceil(maxText + 8)))
 
   const spaceRight = viewportW - l2PanelRect.right - margin
   const spaceLeft = l2PanelRect.left - margin
@@ -299,7 +299,7 @@ const itemClass = (l1) => isShortName(l1.name) ? 'short' : 'long'
   box-shadow: var(--shadow-sm);
   z-index: 10;
   overscroll-behavior: contain;
-  min-width: 260px;
+  min-width: 160px;
   min-height: 120px;
   /* 创建到三级面板的无缝桥接，避免鼠标经过间隙导致失焦 */
 }
@@ -315,7 +315,7 @@ const itemClass = (l1) => isShortName(l1.name) ? 'short' : 'long'
   top: 0; left: -8px;
   width: 8px; height: 100%;
 }
-.panel.level2 ul { padding: 8px 12px; margin: 0; list-style: none }
+.panel.level2 ul { padding: 8px 8px; margin: 0; list-style: none }
 .panel.level2 li { position: relative; padding: 2px 6px; break-inside: avoid; line-height: 24px; font-size: 13px; }
 .panel.level2 li:hover { background: var(--color-bg-secondary) }
 .panel.level2 .l2-list { column-fill: auto; }
@@ -326,9 +326,9 @@ const itemClass = (l1) => isShortName(l1.name) ? 'short' : 'long'
   border: 1px solid var(--color-divider);
   box-shadow: var(--shadow-sm);
   z-index: 20;
-  padding: 8px 10px;
+  padding: 8px 8px;
   overscroll-behavior: contain;
-  min-width: 260px;
+  min-width: 160px;
   min-height: 120px;
 }
 .panel.level3.floating { position: absolute; margin-left: 0; }

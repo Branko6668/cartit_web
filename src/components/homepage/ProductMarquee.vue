@@ -1,5 +1,10 @@
 <template>
   <div class="marquee-wrap" v-if="baseItems.length">
+    <!-- 新品标识 -->
+    <div class="label-new" aria-label="新品">
+      <span class="dot"></span>
+      <span class="text">新品</span>
+    </div>
     <div class="marquee">
       <div class="marquee-track" :style="{ animationDuration: duration + 's' }">
         <ul class="marquee-list">
@@ -19,8 +24,8 @@
         </ul>
       </div>
     </div>
-  <!-- 左右渐隐效果 -->
-  <div class="left-fade" aria-hidden="true"></div>
+  <!-- 左侧直边遮挡（A4割纸效果） -->
+  <div class="left-mask" aria-hidden="true"></div>
   <div class="right-fade" aria-hidden="true"></div>
   </div>
 </template>
@@ -124,7 +129,11 @@ const formatPrice = (v) => {
 }
 .marquee-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  /* 柔和的黄/粉/紫背景光，替代黑色阴影 */
+  box-shadow:
+    0 8px 18px rgba(255, 224, 130, 0.35),   /* 淡黄 */
+    0 12px 28px rgba(255, 171, 190, 0.20),  /* 粉色 */
+    0 16px 36px rgba(195, 168, 255, 0.30);  /* 淡紫 */
 }
 /* 左右渐隐 */
 .right-fade {
@@ -138,17 +147,45 @@ const formatPrice = (v) => {
   pointer-events: none;
 }
 
-/* 新增左侧白色不透明蒙版，与右侧对称 */
-.left-fade {
+/* 左侧直边白色遮挡 */
+.left-mask {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 140px;
-  background: linear-gradient(90deg, var(--color-bg), rgba(255,255,255,0));
+  width: 120px; /* 直边宽度，可按需调整 */
+  background: var(--color-bg);
   z-index: 2;
   pointer-events: none;
+  box-shadow: 16px 0 24px -12px rgba(0,0,0,0.25); /* 更明显的右侧阴影 */
 }
+.label-new {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  background: linear-gradient(135deg, #ff9a6b, #c3a8ff);
+  color: #fff;
+  border-radius: 9999px;
+  z-index: 3; /* 高于 left-mask */
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 20px rgba(255, 125, 0, 0.25), inset 0 0 0 1px rgba(255,255,255,0.35);
+  pointer-events: none; /* 不拦截交互 */
+}
+.label-new .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+.label-new .text { line-height: 1; }
 
 /* 从左往右滚动 */
 @keyframes marquee-right {
