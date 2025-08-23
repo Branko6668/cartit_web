@@ -19,7 +19,7 @@
         <div v-for="i in 10" :key="i" class="card-skeleton"></div>
       </div>
       <div v-else class="grid">
-        <article v-for="p in currentItems" :key="p.id" class="card">
+        <article v-for="p in currentItems" :key="p.id" class="card clickable" @click="goDetail(p.id)" role="button" :aria-label="'查看 ' + p.name">
           <div class="thumb-wrap">
             <img :src="p.image" :alt="p.name" />
           </div>
@@ -42,6 +42,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { getProductsByTag } from '@/network/home'
 
 const tags = [
@@ -68,6 +69,8 @@ function formatPrice(v) {
   const n = Number(v)
   return Number.isNaN(n) ? v : n.toFixed(2)
 }
+const router = useRouter()
+function goDetail(id) { if (id != null) router.push({ name: 'product-detail', params: { id } }) }
 
 async function fetchPage(tagId, page) {
   isLoading.value = true
@@ -178,6 +181,7 @@ watch(activeTag, async (val) => {
   background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0));
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
 }
+.clickable { cursor: pointer; }
 .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 28px var(--accent-green-shadow);

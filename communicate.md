@@ -1,77 +1,65 @@
-**商品搜索**
-`GET /product/search/`
+########## 购物车 ##########
 
-支持按关键词 + 排序 + 分页检索商品核心信息。
+### 获取某用户的购物车
+GET {{base_url}}/shopping_cart/?user_id=1
+Token: {{token}}
 
-**查询参数：**
+示例：
+GET http://localhost:8000/shopping_cart/?user_id=1
 
-| 参数 | 必填 | 说明 | 默认 | 取值/格式 |
-|------|------|------|------|-----------|
-| q | 是 | 搜索关键词（对 name / subtitle / description 模糊匹配） | - | 非空字符串 |
-| page | 否 | 页码 (>=1) | 1 | 正整数 |
-| page_size | 否 | 每页条数 (1~100) | 20 | 正整数 |
-| sort | 否 | 排序方式 | 0 | 0/1/2/3/4 |
+HTTP/1.1 200 OK
+Date: Sat, 23 Aug 2025 06:44:55 GMT
+Server: WSGIServer/0.2 CPython/3.11.9
+Content-Type: application/json
+Allow: GET, POST, HEAD, OPTIONS
+X-Frame-Options: DENY
+Content-Length: 219
+Vary: origin
+X-Content-Type-Options: nosniff
+Referrer-Policy: same-origin
+Cross-Origin-Opener-Policy: same-origin
 
-**sort 排序映射：**
-
-| 值 | 含义 | 实际排序 |
-|----|------|----------|
-| 0 | 默认 | id DESC （最新优先） |
-| 1 | 价格升序 | price ASC, id DESC |
-| 2 | 价格降序 | price DESC, id DESC |
-| 3 | 评论数升序 | review_count ASC, id DESC |
-| 4 | 评论数降序 | review_count DESC, id DESC |
-
-**返回字段(data)：**
-
-| 字段 | 说明 |
-|------|------|
-| q | 原始查询关键词 |
-| sort | 排序方式（同入参） |
-| page | 当前页码 |
-| page_size | 当前页大小 |
-| total | 总记录数 |
-| total_pages | 总页数 |
-| has_next | 是否有下一页 |
-| has_prev | 是否有上一页 |
-| current_count | 本页返回条数 (=results 长度) |
-| results | 商品数组 |
-
-`results[i]` 字段：`id, name, price (字符串), thumbnail, review_count, store_id, store_name`
-
-**成功业务码：** `2002 (PRODUCT_SEARCH_OK)`
-
-**示例请求：**
-```
-GET /product/search/?q=蓝&page=1&page_size=10&sort=4
-```
-
-**示例响应(截断)：**
-```json
 {
-  "code": 2002,
-  "msg": "搜索成功",
-  "data": {
-    "q": "蓝",
-    "sort": 4,
-    "page": 1,
-    "page_size": 10,
-    "total": 37,
-    "total_pages": 4,
-    "has_next": true,
-    "has_prev": false,
-    "current_count": 10,
-    "results": [
-      {
-        "id": 1001,
-        "name": "蓝色T恤",
-        "price": "99.00",
-        "thumbnail": "/static/product_images/blue.png",
-        "review_count": 12,
-        "store_id": 5,
-        "store_name": "旗舰店"
-      }
-    ]
-  }
+  "code": 3000,
+  "msg": "获取购物车信息成功",
+  "data": [
+    {
+      "id": 18,
+      "create_time": "2025-08-19 08:27:41",
+      "update_time": "2025-08-19 08:27:41",
+      "quantity": 3,
+      "selected": true,
+      "user": 1,
+      "product": 21,
+      "product_name": "商品3848"
+    }
+  ]
 }
-```
+Response file saved.
+> 2025-08-23T144455.200.json
+
+Response code: 200 (OK); Time: 24ms (24 ms); Content length: 197 bytes (197 B)
+
+
+
+### 添加多个商品
+POST {{base_url}}/shopping_cart/
+Content-Type: application/json
+Token: {{token}}
+
+{
+  "user_id": 9,
+  "product_id": 1001,
+  "quantity": 2
+}
+
+### Shopping Cart - Negative quantity error
+POST {{base_url}}/shopping_cart/
+Content-Type: application/json
+Token: {{token}}
+
+{
+  "user_id": 9,
+  "product_id": 1001,
+  "quantity": -999
+}

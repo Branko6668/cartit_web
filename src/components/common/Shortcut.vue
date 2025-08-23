@@ -1,15 +1,39 @@
 <template>
     <div class="warpper">
         <div class="header">
-            <a href="">你好，请登录</a>
-            <a href="">点击注册</a> | 
-            <a href="">我的订单</a>
+            <template v-if="isLoggedIn">
+                <span>欢迎你，{{ username }}</span>
+                <a href="" @click.prevent="goOrders">我的订单</a>
+                <a href="" @click.prevent="logout">退出</a>
+            </template>
+            <template v-else>
+                <a href="" @click.prevent="goLogin">你好，请登录</a>
+                <a href="" @click.prevent="goRegister">点击注册</a>
+                |
+                <a href="" @click.prevent="goOrders">我的订单</a>
+            </template>
         </div>
-
     </div>
-</template>
+ </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
+const store = useStore()
+const router = useRouter()
+
+const isLoggedIn = computed(() => store.getters['auth/isLoggedIn'])
+const username = computed(() => store.getters['auth/username'])
+
+function goLogin() { router.push({ path: '/login' }) }
+function goRegister() { router.push({ path: '/register' }) }
+function goOrders() {
+    if (!isLoggedIn.value) return router.push({ path: '/login', query: { next: '/order' } })
+    router.push({ path: '/order' })
+}
+function logout() { store.dispatch('auth/logout') }
 </script>
 
 <style lang="less" scoped>

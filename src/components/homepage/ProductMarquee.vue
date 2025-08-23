@@ -8,7 +8,7 @@
     <div class="marquee">
       <div class="marquee-track" :style="{ animationDuration: duration + 's' }">
         <ul class="marquee-list">
-          <li v-for="p in baseItems" :key="'a-'+p.id" class="marquee-item">
+          <li v-for="p in baseItems" :key="'a-'+p.id" class="marquee-item clickable" @click="goDetail(p.id)" role="button" :aria-label="'查看 ' + p.name">
             <img :src="p.image" :alt="p.name" class="thumb" />
             <div class="name" :title="p.name">{{ p.name }}</div>
             <div class="price">￥{{ formatPrice(p.price) }}</div>
@@ -16,7 +16,7 @@
         </ul>
         <!-- 无缝拷贝一份，形成连续循环 -->
         <ul class="marquee-list">
-          <li v-for="p in baseItems" :key="'b-'+p.id" class="marquee-item">
+          <li v-for="p in baseItems" :key="'b-'+p.id" class="marquee-item clickable" @click="goDetail(p.id)" role="button" :aria-label="'查看 ' + p.name">
             <img :src="p.image" :alt="p.name" class="thumb" />
             <div class="name" :title="p.name">{{ p.name }}</div>
             <div class="price">￥{{ formatPrice(p.price) }}</div>
@@ -32,6 +32,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   items: { type: Array, default: () => [] },
@@ -58,6 +59,10 @@ const formatPrice = (v) => {
   const n = Number(v)
   if (Number.isNaN(n)) return v
   return n.toFixed(2)
+}
+const router = useRouter()
+function goDetail(id) {
+  if (id != null) router.push({ name: 'product-detail', params: { id } })
 }
 </script>
 
@@ -100,6 +105,7 @@ const formatPrice = (v) => {
   padding: 10px 10px 12px;
   transition: transform .2s ease, box-shadow .2s ease;
 }
+.clickable { cursor: pointer; }
 .thumb {
   width: 160px;
   height: 160px;

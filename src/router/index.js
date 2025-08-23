@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import SearchView from '../views/SearchView.vue'
+import ProductDetailView from '../views/ProductDetailView.vue'
+import AuthView from '../views/AuthView.vue'
+import store from '@/store'
 
 const routes = [
   {
@@ -15,6 +18,15 @@ const routes = [
     component: SearchView,
     meta: { title: '搜索结果 - Cartit' }
   },
+  {
+    path: '/product/:id',
+    name: 'product-detail',
+    component: ProductDetailView,
+    meta: { title: '商品详情 - Cartit' }
+  },
+  { path: '/login', name: 'login', component: AuthView, meta: { title: '登录 - Cartit' } },
+  { path: '/register', name: 'register', component: AuthView, meta: { title: '注册 - Cartit' } },
+  { path: '/forgot', name: 'forgot', component: AuthView, meta: { title: '找回密码 - Cartit' } },
   
 ]
 
@@ -24,6 +36,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  if (!store.state.auth?.inited) store.dispatch('auth/init')
+  // 仅对示例受保护页面做登录校验，商品/搜索默认放行
+  const protectedPrefixes = ['/order', '/user', '/review']
+  const needLogin = protectedPrefixes.some(p => to.path === p || to.path.startsWith(p + '/'))
+  const isAuthed = store.getters['auth/isLoggedIn']
+  if (needLogin && !isAuthed && !['login','register','forgot'].includes(to.name)) {
+    return next({ name: 'login', query: { next: to.fullPath } })
+  }
   document.title = to.meta.title || 'Default Title';
   next()
 })

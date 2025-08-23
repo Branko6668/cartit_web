@@ -4,16 +4,7 @@
     <Header />
     <div class="search-page">
       <div class="content">
-        <!-- 搜索页专用搜索框 -->
-        <form class="searchbar" @submit.prevent="onSubmitLocal">
-          <input
-            class="search-input"
-            type="text"
-            v-model="qLocal"
-            placeholder="在结果页继续搜索"
-          />
-          <button type="submit" class="search-btn">搜索</button>
-        </form>
+        
 
         <!-- 工具栏：排序 + 概览 -->
         <div class="toolbar">
@@ -39,7 +30,7 @@
         <div v-else>
           <div v-if="results.length === 0" class="empty">没有找到相关商品</div>
           <div class="grid" v-else>
-            <div class="card" v-for="item in results" :key="item.id">
+            <div class="card clickable" v-for="item in results" :key="item.id" @click="goDetail(item.id)" role="button" :aria-label="'查看 ' + item.name">
               <div class="thumb">
                 <img :src="item.image" :alt="item.name" loading="lazy"/>
               </div>
@@ -51,7 +42,7 @@
                 </div>
                 <div class="store">店铺：{{ item.store_name || '-' }}</div>
               </div>
-              <button class="add-cart" @click="addToCart(item)">加入购物车</button>
+              <button class="add-cart" @click.stop="addToCart(item)">加入购物车</button>
             </div>
           </div>
 
@@ -84,7 +75,6 @@ const router = useRouter()
 
 // state
 const q = ref('')
-const qLocal = ref('')
 const sort = ref(0) // 0 默认, 1 价格升, 2 价格降, 3 评论升, 4 评论降
 const page = ref(1)
 const pageSize = ref(20)
@@ -143,7 +133,6 @@ async function fetchData() {
 
 function syncFromRoute(r = route) {
   q.value = (r.query.q || '').toString()
-  qLocal.value = q.value
   sort.value = Number(r.query.sort ?? 0)
   page.value = Math.max(1, Number(r.query.page ?? 1))
   pageSize.value = Math.min(100, Math.max(1, Number(r.query.page_size ?? 20)))
@@ -179,16 +168,12 @@ function onPageChange(p) {
   pushRoute()
 }
 
-function onSubmitLocal() {
-  const v = (qLocal.value || '').trim()
-  if (!v) return
-  q.value = v
-  page.value = 1
-  pushRoute({ q: v })
-}
-
 function addToCart(item) {
   console.log('加入购物车', item)
+}
+
+function goDetail(id) {
+  if (id != null) router.push({ name: 'product-detail', params: { id }, query: { sort: sort.value } })
 }
 
 onMounted(() => {
@@ -197,12 +182,10 @@ onMounted(() => {
 })
 
 watch(() => route.query, () => {
-  const old = { q: q.value, sort: sort.value, page: page.value, page_size: pageSize.value }
   syncFromRoute()
-  const now = { q: q.value, sort: sort.value, page: page.value, page_size: pageSize.value }
-  const changed = JSON.stringify(old) !== JSON.stringify(now)
   if (routeSyncSkip.value) { routeSyncSkip.value = false; return }
-  if (changed) fetchData()
+  // 始终在路由查询参数变化时刷新，确保新搜索一定更新结果
+  fetchData()
 })
 </script>
 
@@ -214,31 +197,6 @@ watch(() => route.query, () => {
 .content {
   width: var(--content-width);
   margin: 0 auto;
-}
-.searchbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: var(--spacing-md);
-}
-.searchbar .search-input {
-  flex: 1;
-  height: 36px;
-  padding: 0 12px;
-  border: 2px solid var(--color-border);
-  border-radius: 9999px;
-  background: var(--color-bg);
-  outline: none;
-}
-.searchbar .search-btn {
-  height: 36px;
-  padding: 0 16px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #ffb37a, #ff6b35);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
 }
 .toolbar {
   display: flex;
@@ -302,6 +260,7 @@ watch(() => route.query, () => {
   border: none;
   color: #fff; font-weight: 600; cursor: pointer;
 }
+.clickable { cursor: pointer; }
 .pager { display: flex; justify-content: center; margin-top: var(--spacing-lg); }
 .loading, .empty, .error { padding: 24px; color: var(--color-text-secondary); }
 .error { color: #d93025; }
