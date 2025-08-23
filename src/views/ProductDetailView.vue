@@ -18,7 +18,7 @@
               <input type="number" v-model.number="qty" min="1" />
               <button @click="incQty">+</button>
             </div>
-            <button class="add-cart">加入购物车</button>
+            <button class="add-cart" @click="onAddToCart">加入购物车</button>
           </div>
         </section>
 
@@ -52,10 +52,15 @@
 import Shortcut from '@/components/common/Shortcut.vue'
 import Header from '@/components/homepage/Header.vue'
 import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
+import { addToCart as apiAddToCart } from '@/network/cart'
 import { getProductById, getReviewsByProduct } from '@/network/product'
 
 const route = useRoute()
+const router = useRouter()
+const store = useStore()
 const productId = computed(() => Number(route.params.id))
 
 const product = ref({})
@@ -113,6 +118,17 @@ async function loadReviews() {
 }
 
 onMounted(() => { loadProduct(); loadReviews() })
+
+async function onAddToCart(){
+  const isLoggedIn = store.getters['auth/isLoggedIn']
+  if (!isLoggedIn) { router.push({ name: 'login', query: { next: route.fullPath } }); return }
+  try {
+    const user = store.state.auth.user
+  const r = await apiAddToCart({ product_id: productId.value, quantity: qty.value, mode: 'add' })
+  if (r && (r.code === 3000 || r.code === 3001 || r.code === 200)) { ElMessage.success('已加入购物车'); store.dispatch('cart/refresh') }
+  else { ElMessage.error(r?.msg || '加入购物车失败') }
+  } catch(e){ ElMessage.error(e?.normalizedMessage || e?.message || '加入购物车失败') }
+}
 </script>
 
 <style scoped>

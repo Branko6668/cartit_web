@@ -33,17 +33,18 @@
 <script setup>
     import CartitLogo from '@/components/common/CartitLogo.vue';
     import SearchBox from '@/components/homepage/SearchBox.vue';
-    import { ref } from 'vue'
+    import { ref, onMounted, computed } from 'vue'
     import { useRouter } from 'vue-router'
+    import { useStore } from 'vuex'
 
     const router = useRouter()
-    // TODO: 将购物车数量与全局 store 对接
-    const cartCount = ref(2)
+    const store = useStore()
+    const cartCount = computed(() => store.getters['cart/count'])
+    onMounted(() => { store.dispatch('cart/refresh') })
 
     const goToCart = () => {
-        // 若你之后添加了购物车路由，可在此导航
-        // if (router.hasRoute('cart')) router.push({ name: 'cart' })
-        console.log('前往购物车')
+        if (router.hasRoute('cart')) router.push({ name: 'cart' })
+        else console.log('前往购物车')
     }
 
 </script>

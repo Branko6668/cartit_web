@@ -4,6 +4,7 @@ import SearchView from '../views/SearchView.vue'
 import ProductDetailView from '../views/ProductDetailView.vue'
 import AuthView from '../views/AuthView.vue'
 import store from '@/store'
+const CartView = () => import('../views/CartView.vue')
 
 const routes = [
   {
@@ -27,6 +28,7 @@ const routes = [
   { path: '/login', name: 'login', component: AuthView, meta: { title: '登录 - Cartit' } },
   { path: '/register', name: 'register', component: AuthView, meta: { title: '注册 - Cartit' } },
   { path: '/forgot', name: 'forgot', component: AuthView, meta: { title: '找回密码 - Cartit' } },
+  { path: '/cart', name: 'cart', component: CartView, meta: { title: '我的购物车 - Cartit', requiresAuth: true } },
   
 ]
 
@@ -38,7 +40,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (!store.state.auth?.inited) store.dispatch('auth/init')
   // 仅对示例受保护页面做登录校验，商品/搜索默认放行
-  const protectedPrefixes = ['/order', '/user', '/review']
+  const protectedPrefixes = ['/order', '/user', '/review', '/cart']
   const needLogin = protectedPrefixes.some(p => to.path === p || to.path.startsWith(p + '/'))
   const isAuthed = store.getters['auth/isLoggedIn']
   if (needLogin && !isAuthed && !['login','register','forgot'].includes(to.name)) {

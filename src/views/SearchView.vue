@@ -42,7 +42,7 @@
                 </div>
                 <div class="store">店铺：{{ item.store_name || '-' }}</div>
               </div>
-              <button class="add-cart" @click.stop="addToCart(item)">加入购物车</button>
+              <button class="add-cart" @click.stop="addToCartHandler(item)">加入购物车</button>
             </div>
           </div>
 
@@ -68,10 +68,14 @@ import Shortcut from '@/components/common/Shortcut.vue'
 import Header from '@/components/homepage/Header.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
+import { addToCart } from '@/network/cart'
 import { searchProducts } from '@/network/search'
 
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 
 // state
 const q = ref('')
@@ -168,8 +172,17 @@ function onPageChange(p) {
   pushRoute()
 }
 
-function addToCart(item) {
-  console.log('加入购物车', item)
+async function addToCartHandler(item) {
+  const isLoggedIn = store.getters['auth/isLoggedIn']
+  if (!isLoggedIn) {
+    router.push({ name: 'login', query: { next: route.fullPath } })
+    return
+  }
+  try {
+    const r = await addToCart({ product_id: item.id, quantity: 1, mode: 'add' })
+    if (r && (r.code === 3000 || r.code === 3001 || r.code === 200)) { ElMessage.success('已加入购物车'); store.dispatch('cart/refresh') }
+    else { ElMessage.error(r?.msg || '加入购物车失败') }
+  } catch(e){ ElMessage.error(e?.normalizedMessage || e?.message || '加入购物车失败') }
 }
 
 function goDetail(id) {

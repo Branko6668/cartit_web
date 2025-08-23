@@ -48,5 +48,29 @@ const auth = {
 }
 
 export default createStore({
-  modules: { auth }
+  modules: {
+    auth,
+    cart: {
+      namespaced: true,
+      state: () => ({ count: 0 }),
+      getters: { count: s => s.count },
+      mutations: { setCount(s, n){ s.count = Number(n||0) } },
+      actions: {
+        async refresh({ commit, rootGetters }){
+          // 未登录则不请求受保护的购物车接口，避免控制台出现 401 报错
+          try {
+            const isAuthed = rootGetters && rootGetters['auth/isLoggedIn']
+            if (!isAuthed) { commit('setCount', 0); return }
+          } catch { /* ignore */ }
+          try {
+            const { getCart } = await import('@/network/cart')
+            const r = await getCart()
+            const total = r?.data?.summary?.total_count
+            if (typeof total !== 'undefined') commit('setCount', total)
+            else commit('setCount', Array.isArray(r?.data?.items)? r.data.items.length : 0)
+          } catch { /* ignore */ }
+        }
+      }
+    }
+  }
 })
