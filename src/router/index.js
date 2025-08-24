@@ -8,6 +8,8 @@ const CartView = () => import('../views/CartView.vue')
 const OrderSuccessView = () => import('../views/OrderSuccessView.vue')
 const ProfileView = () => import('../views/ProfileView.vue')
 const ProfileEditView = () => import('../views/ProfileEditView.vue')
+const OrderListView = () => import('../views/OrderListView.vue')
+const OrderDetailView = () => import('../views/OrderDetailView.vue')
 
 const routes = [
   {
@@ -33,6 +35,8 @@ const routes = [
   { path: '/forgot', name: 'forgot', component: AuthView, meta: { title: '找回密码 - Cartit' } },
   { path: '/cart', name: 'cart', component: CartView, meta: { title: '我的购物车 - Cartit', requiresAuth: true } },
   { path: '/order/success', name: 'order-success', component: OrderSuccessView, meta: { title: '下单成功 - Cartit', requiresAuth: true } },
+  { path: '/order/list', name: 'order-list', component: OrderListView, meta: { title: '我的订单 - Cartit', requiresAuth: true } },
+  { path: '/order/:id', name: 'order-detail', component: OrderDetailView, meta: { title: '订单详情 - Cartit', requiresAuth: true } },
   { path: '/user/profile', name: 'user-profile', component: ProfileView, meta: { title: '我的主页 - Cartit', requiresAuth: true } },
   { path: '/user/profile/edit', name: 'user-profile-edit', component: ProfileEditView, meta: { title: '编辑资料 - Cartit', requiresAuth: true } },
   

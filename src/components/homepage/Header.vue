@@ -24,12 +24,13 @@
                 </div>
             </div>
             <div class="right">
-                                <div class="user-area">
-                                    <template v-if="isLoggedIn">
-                                        <button class="link" @click="goToProfile">我的主页</button>
-                                    </template>
-                                    <img class="promo" src="@/assets/images/right_content.png" alt="推广图"/>
-                                </div>
+                                                <div class="user-area">
+                                                    <template v-if="isLoggedIn">
+                                                        <button class="link" @click="goToProfile">我的主页</button>
+                                                        <button class="link" @click="goToOrders">我的订单</button>
+                                                    </template>
+                                                    <img class="promo" src="@/assets/images/right_content.png" alt="推广图"/>
+                                                </div>
             </div>
         </div>
     </div>
@@ -56,6 +57,11 @@
     const goToProfile = () => {
         if (router.hasRoute('user-profile')) router.push({ name: 'user-profile' })
         else router.push('/user/profile')
+    }
+
+    const goToOrders = () => {
+        if (router.hasRoute('order-list')) router.push({ name: 'order-list' })
+        else router.push('/order/list')
     }
 
 </script>
