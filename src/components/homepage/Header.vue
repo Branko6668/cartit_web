@@ -23,15 +23,9 @@
                     </div>
                 </div>
             </div>
-            <div class="right">
-                                                <div class="user-area">
-                                                    <template v-if="isLoggedIn">
-                                                        <button class="link" @click="goToProfile">我的主页</button>
-                                                        <button class="link" @click="goToOrders">我的订单</button>
-                                                    </template>
-                                                    <img class="promo" src="@/assets/images/right_content.png" alt="推广图"/>
-                                                </div>
-            </div>
+                        <div class="right">
+                            <img class="promo" src="@/assets/images/right_content.png" alt="推广图"/>
+                        </div>
         </div>
     </div>
 </template>
@@ -46,7 +40,6 @@
     const router = useRouter()
     const store = useStore()
     const cartCount = computed(() => store.getters['cart/count'])
-    const isLoggedIn = computed(() => store.getters['auth/isLoggedIn'])
     onMounted(() => { store.dispatch('cart/refresh') })
 
     const goToCart = () => {
@@ -54,15 +47,6 @@
         else console.log('前往购物车')
     }
 
-    const goToProfile = () => {
-        if (router.hasRoute('user-profile')) router.push({ name: 'user-profile' })
-        else router.push('/user/profile')
-    }
-
-    const goToOrders = () => {
-        if (router.hasRoute('order-list')) router.push({ name: 'order-list' })
-        else router.push('/order/list')
-    }
 
 </script>
 

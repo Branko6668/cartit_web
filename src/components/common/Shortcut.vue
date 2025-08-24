@@ -2,7 +2,7 @@
     <div class="warpper">
         <div class="header">
             <template v-if="isLoggedIn">
-                <span>欢迎你，{{ username }}</span>
+                <a href="" @click.prevent="goProfile">欢迎你，{{ username }}</a>
                 <a href="" @click.prevent="goOrders">我的订单</a>
                 <a href="" @click.prevent="logout">退出</a>
             </template>
@@ -27,11 +27,12 @@ const router = useRouter()
 const isLoggedIn = computed(() => store.getters['auth/isLoggedIn'])
 const username = computed(() => store.getters['auth/username'])
 
-function goLogin() { router.push({ path: '/login' }) }
-function goRegister() { router.push({ path: '/register' }) }
+function goLogin() { router.push({ name: 'login' }) }
+function goRegister() { router.push({ name: 'register' }) }
+function goProfile() { router.push({ name: 'user-profile' }) }
 function goOrders() {
-    if (!isLoggedIn.value) return router.push({ path: '/login', query: { next: '/order' } })
-    router.push({ path: '/order' })
+    if (!isLoggedIn.value) return router.push({ name: 'login', query: { next: '/order/list' } })
+    router.push({ name: 'order-list' })
 }
 function logout() { store.dispatch('auth/logout') }
 </script>
