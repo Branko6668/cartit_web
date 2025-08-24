@@ -21,6 +21,8 @@ export function request(config) {
         if (token && !isPublic && !isAuthNoToken) {
           config.headers = config.headers || {}
           config.headers['Token'] = token
+          // 兼容部分接口使用标准 Authorization Bearer
+          if (!config.headers['Authorization']) config.headers['Authorization'] = `Bearer ${token}`
         }
       } catch {}
       return config;

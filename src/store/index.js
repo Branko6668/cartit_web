@@ -50,6 +50,22 @@ const auth = {
 export default createStore({
   modules: {
     auth,
+    order: {
+      namespaced: true,
+      state: () => ({ lastOrders: [] }),
+      getters: { lastOrders: s => s.lastOrders },
+      mutations: {
+        setLastOrders(s, arr){
+          s.lastOrders = Array.isArray(arr) ? arr : []
+          try { localStorage.setItem('lastOrders', JSON.stringify(s.lastOrders)) } catch {}
+        }
+      },
+      actions: {
+        loadFromStorage({ commit }){
+          try { const arr = JSON.parse(localStorage.getItem('lastOrders')||'[]'); commit('setLastOrders', arr) } catch { commit('setLastOrders', []) }
+        }
+      }
+    },
     cart: {
       namespaced: true,
       state: () => ({ count: 0 }),

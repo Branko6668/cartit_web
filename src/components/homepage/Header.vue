@@ -24,7 +24,12 @@
                 </div>
             </div>
             <div class="right">
-                <img class="promo" src="@/assets/images/right_content.png" alt="推广图"/>
+                                <div class="user-area">
+                                    <template v-if="isLoggedIn">
+                                        <button class="link" @click="goToProfile">我的主页</button>
+                                    </template>
+                                    <img class="promo" src="@/assets/images/right_content.png" alt="推广图"/>
+                                </div>
             </div>
         </div>
     </div>
@@ -40,11 +45,17 @@
     const router = useRouter()
     const store = useStore()
     const cartCount = computed(() => store.getters['cart/count'])
+    const isLoggedIn = computed(() => store.getters['auth/isLoggedIn'])
     onMounted(() => { store.dispatch('cart/refresh') })
 
     const goToCart = () => {
         if (router.hasRoute('cart')) router.push({ name: 'cart' })
         else console.log('前往购物车')
+    }
+
+    const goToProfile = () => {
+        if (router.hasRoute('user-profile')) router.push({ name: 'user-profile' })
+        else router.push('/user/profile')
     }
 
 </script>
@@ -133,6 +144,8 @@
             display: flex;
             align-items: center;
             
+            .user-area { display: flex; align-items: center; gap: 12px; }
+            .link { background: transparent; border: none; color: var(--el-color-primary); cursor: pointer; }
             .promo {
                 height: 100px;
                 width: auto;
