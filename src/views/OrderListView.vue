@@ -72,6 +72,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { listOrders } from '@/network/order'
+import { createAlipayPayment } from '@/network/payment'
 import { addToCart } from '@/network/cart'
 
 const router = useRouter()
@@ -129,7 +130,7 @@ const processingId = ref(null)
 function actionsFor(o){
   const commonDetail = { label: '查看详情', link: true, onClick: goDetail }
   const map = {
-    pending_payment: [ { label:'去支付', type:'primary', onClick:onPay }, { label:'取消订单', onClick:onCancel }, commonDetail ],
+  pending_payment: [ { label:'去支付', type:'primary', onClick:onPay }, { label:'取消订单', onClick:onCancel }, commonDetail ],
     paid: [ { label:'申请退款', onClick:onRefund }, { label:'催发货', onClick:onUrgeShip }, commonDetail ],
     shipped: [ { label:'查看物流', onClick:onViewLogistics }, { label:'确认收货', type:'primary', onClick:onConfirmReceive }, { label:'申请售后', onClick:onAfterSale }, commonDetail ],
     delivered: [ { label:'去评价', onClick:onReview }, { label:'申请售后', onClick:onAfterSale }, commonDetail, { label:'确认完成', onClick:onComplete } ],
@@ -141,7 +142,19 @@ function actionsFor(o){
 }
 
 function toastTodo(msg='功能待接入'){ ElMessage.info(msg) }
-function onPay(o){ toastTodo('支付功能待接入'); goDetail(o) }
+async function onPay(o){
+  try {
+    processingId.value = o.id
+    const r = await createAlipayPayment(o.id)
+    if (r?.code === 4101) return router.push({ name:'login', query:{ next:'/order/list' } })
+    if (r?.code === 4000 && r?.data?.pay_url) {
+      window.location.href = r.data.pay_url
+    } else {
+      ElMessage.error(r?.msg || '创建支付链接失败')
+    }
+  } catch(e){ ElMessage.error(e?.normalizedMessage || e?.message || '发起支付失败') }
+  finally { processingId.value = null }
+}
 function onCancel(o){ toastTodo('取消订单功能待接入') }
 function onRefund(o){ toastTodo('退款申请功能待接入') }
 function onUrgeShip(o){ toastTodo('已为您提交催发货需求') }

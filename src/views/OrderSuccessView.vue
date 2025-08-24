@@ -102,6 +102,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getUserProfile, listAddresses, createAddress, setDefaultAddress } from '@/network/user'
+import { createAlipayPayment } from '@/network/payment'
 
 const store = useStore()
 const router = useRouter()
@@ -190,9 +191,22 @@ async function goPay(){
   if (!selectedAddressId.value) return ElMessage.warning('请选择收货地址')
   paying.value = true
   try {
-    // 暂时仅做前端占位
-    ElMessage.success(`已选择 ${payMethod.value==='alipay'?'支付宝':'微信'}，应付￥${totalPayable.value}（模拟）`)
-    router.push({ name: 'order-list' })
+    const os = Array.isArray(orders.value)? orders.value : []
+    if (!os.length) { ElMessage.error('未找到订单'); return }
+    if (payMethod.value !== 'alipay') {
+      ElMessage.info('暂未接入该支付方式，请选择支付宝')
+      return
+    }
+    // 仅对第一笔订单生成支付链接（多单可循环处理或合单后端支持）
+    const first = os[0]
+    const r = await createAlipayPayment(first.id)
+    if (r?.code === 4101) { store.dispatch('auth/logout'); return router.push({ name:'login', query:{ next:'/order/success' } }) }
+    if (r?.code === 0 && r?.data?.pay_url) {
+      // 跳转支付宝（新窗口或当前窗口，这里使用当前窗口）
+      window.location.href = r.data.pay_url
+    } else {
+      ElMessage.error(r?.msg || (r?.errors ? JSON.stringify(r.errors) : '创建支付链接失败'))
+    }
   } catch(e) { ElMessage.error(e?.normalizedMessage || e?.message || '支付发起失败') }
   finally { paying.value = false }
 }
